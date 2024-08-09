@@ -1,0 +1,2666 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="8/3/2024 12:59:03 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-V2D092C"
+  DTS:CreatorName="DESKTOP-V2D092C\hpc"
+  DTS:DTSID="{3C748EE1-F321-4E17-8E82-86477C049BA1}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5556.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Fact Sales Full Load"
+  DTS:PackageType="5"
+  DTS:VersionBuild="35"
+  DTS:VersionGUID="{F0991EA7-2691-40D3-9BB4-BB7CD504D4F7}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8392B6F0-A0A8-4628-9893-6DA15EE7E29C}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="last_load_date">
+      <DTS:VariableValue
+        DTS:DataType="7">12/31/2099</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT Fact Table"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{F0AA95E7-7272-4C2A-A749-FED53A97C5A9}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT Fact Table"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT Fact Table\DRV - Calculation"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DRV - Calculation"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input].Columns[OrderQty]"
+                      cachedDataType="i2"
+                      cachedName="OrderQty"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input].Columns[UnitPrice]"
+                      cachedDataType="cy"
+                      cachedName="UnitPrice"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input].Columns[standard_cost]"
+                      cachedDataType="cy"
+                      cachedName="standard_cost"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[standard_cost]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_sales]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_sales]"
+                      name="extended_sales"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_CY)(#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]} * #{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPrice]})</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_CY)(OrderQty * UnitPrice)</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_cost]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_cost]"
+                      name="extended_cost"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_CY)(#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]} * #{Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[standard_cost]})</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_CY)(OrderQty * standard_cost)</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\DRV - Replace Nulls"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DRV - Replace Nulls"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input].Columns[customer_key]"
+                      cachedDataType="i4"
+                      cachedName="customer_key"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[ISNULL](#{Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]}) ? 0 : #{Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">ISNULL(customer_key) ? 0 : customer_key</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input].Columns[product_key]"
+                      cachedDataType="i4"
+                      cachedName="product_key"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[ISNULL](#{Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]}) ? 0 : #{Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">ISNULL(product_key) ? 0 : product_key</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input].Columns[territory_key]"
+                      cachedDataType="i4"
+                      cachedName="territory_key"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[ISNULL](#{Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]}) ? 0 : #{Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">ISNULL(territory_key) ? 0 : territory_key</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input].Columns[order_date_key]"
+                      cachedDataType="i4"
+                      cachedName="order_date_key"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[ISNULL](#{Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]}) ? 0 : #{Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">ISNULL(order_date_key) ? 0 : order_date_key</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\LKP - Customers"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="LKP - Customers"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT customer_key, customer_id
+FROM     dbo.dim_customer
+where is_current = 1</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT customer_key, customer_id
+FROM     dbo.dim_customer
+where is_current = 1) [refTable]
+where [refTable].[customer_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="customer_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="customer_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[CustomerID]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\LKP - Customers.Connections[OleDbConnection]"
+                  connectionManagerID="{0F1077EC-5EE0-4A5F-A94C-125440725247}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.EO_AdventureWorksDW2022]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input].Columns[CustomerID]"
+                      cachedDataType="i4"
+                      cachedName="CustomerID"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[CustomerID]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">customer_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="IgnoreFailure"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]"
+                      name="customer_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">customer_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\LKP - Date"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="LKP - Date"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT date_key as order_date_key, full_date
+FROM     dim_date</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT date_key as order_date_key, full_date
+FROM     dim_date) [refTable]
+where [refTable].[full_date] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="order_date_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="full_date" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderDate]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\LKP - Date.Connections[OleDbConnection]"
+                  connectionManagerID="{0F1077EC-5EE0-4A5F-A94C-125440725247}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.EO_AdventureWorksDW2022]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input].Columns[OrderDate]"
+                      cachedDataType="dbDate"
+                      cachedName="OrderDate"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderDate]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">full_date</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="IgnoreFailure"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]"
+                      name="order_date_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">order_date_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\LKP - Product"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="LKP - Product"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT product_key, product_id, standard_cost
+FROM     dbo.dim_product
+WHERE is_current = 1</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT product_key, product_id, standard_cost
+FROM     dbo.dim_product
+WHERE is_current = 1) [refTable]
+where [refTable].[product_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="product_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="product_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="standard_cost" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[ProductID]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\LKP - Product.Connections[OleDbConnection]"
+                  connectionManagerID="{0F1077EC-5EE0-4A5F-A94C-125440725247}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.EO_AdventureWorksDW2022]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input].Columns[ProductID]"
+                      cachedDataType="i4"
+                      cachedName="ProductID"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[ProductID]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">product_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="IgnoreFailure"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]"
+                      name="product_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">product_key</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[standard_cost]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[standard_cost]"
+                      name="standard_cost"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">standard_cost</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\LKP - Terriotry"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="LKP - Terriotry"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+	territory_key,
+	territory_id
+FROM dim_territory
+WHERE is_current = 1</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT
+	territory_key,
+	territory_id
+FROM dim_territory
+WHERE is_current = 1) [refTable]
+where [refTable].[territory_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="territory_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="territory_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TerritoryID]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\LKP - Terriotry.Connections[OleDbConnection]"
+                  connectionManagerID="{0F1077EC-5EE0-4A5F-A94C-125440725247}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.EO_AdventureWorksDW2022]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input].Columns[TerritoryID]"
+                      cachedDataType="i4"
+                      cachedName="TerritoryID"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TerritoryID]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">territory_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="IgnoreFailure"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]"
+                      name="territory_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">territory_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\Merge Join"
+              componentClassID="Microsoft.MergeJoin"
+              contactInfo="Merge Join;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Combine two sorted data flows into one using the FULL, LEFT, or INNER join. We recommend this transformation when data flows can be sorted at their sources."
+              name="Merge Join"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of join to perform."
+                  name="JoinType"
+                  typeConverter="JoinType">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of columns in the ordering key."
+                  name="NumKeyColumns">1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the null values are treated as equal values."
+                  name="TreatNullsAsEqual">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Indicates the requested maximum buffers per input before blocking."
+                  name="MaxBuffersPerInput">5</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Left Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[SalesOrderID]"
+                      cachedDataType="i4"
+                      cachedName="SalesOrderID"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[SalesOrderNumber]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="SalesOrderNumber"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[OrderDate]"
+                      cachedDataType="dbDate"
+                      cachedName="OrderDate"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[OrderDate]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[CustomerID]"
+                      cachedDataType="i4"
+                      cachedName="CustomerID"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[CustomerID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[TerritoryID]"
+                      cachedDataType="i4"
+                      cachedName="TerritoryID"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TerritoryID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[TaxAmt]"
+                      cachedDataType="cy"
+                      cachedName="TaxAmt"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TaxAmt]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[Freight]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Right Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[SalesOrderID]"
+                      cachedDataType="i4"
+                      cachedName="SalesOrderID"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[SalesOrderDetailID]"
+                      cachedDataType="i4"
+                      cachedName="SalesOrderDetailID"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[ProductID]"
+                      cachedDataType="i4"
+                      cachedName="ProductID"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[ProductID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[OrderQty]"
+                      cachedDataType="i2"
+                      cachedName="OrderQty"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[OrderQty]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[UnitPrice]"
+                      cachedDataType="cy"
+                      cachedName="UnitPrice"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[UnitPriceDiscount]"
+                      cachedDataType="cy"
+                      cachedName="UnitPriceDiscount"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[LineTotal]"
+                      cachedDataType="numeric"
+                      cachedName="LineTotal"
+                      cachedPrecision="38"
+                      cachedScale="6"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[LineTotal]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output]"
+                  isSorted="true"
+                  name="Merge Join Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderID]"
+                      name="SalesOrderID"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[SalesOrderID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderNumber]"
+                      dataType="wstr"
+                      length="25"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderNumber]"
+                      name="SalesOrderNumber">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[SalesOrderNumber]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderDate]"
+                      dataType="dbDate"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderDate]"
+                      name="OrderDate">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[OrderDate]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[CustomerID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[CustomerID]"
+                      name="CustomerID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[CustomerID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TerritoryID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TerritoryID]"
+                      name="TerritoryID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[TerritoryID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TaxAmt]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[TaxAmt]"
+                      name="TaxAmt">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[TaxAmt]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[Freight]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[Freight]"
+                      name="Freight">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input].Columns[Freight]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderDetailID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderDetailID]"
+                      name="SalesOrderDetailID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[SalesOrderDetailID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[ProductID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[ProductID]"
+                      name="ProductID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[ProductID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]"
+                      dataType="i2"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]"
+                      name="OrderQty">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[OrderQty]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPrice]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPrice]"
+                      name="UnitPrice">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[UnitPrice]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPriceDiscount]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPriceDiscount]"
+                      name="UnitPriceDiscount">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[UnitPriceDiscount]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[LineTotal]"
+                      dataType="numeric"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[LineTotal]"
+                      name="LineTotal"
+                      precision="38"
+                      scale="6">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input].Columns[LineTotal]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[fact_sales]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="{0F1077EC-5EE0-4A5F-A94C-125440725247}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.EO_AdventureWorksDW2022]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[freight]"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[Freight]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[customer_key]"
+                      cachedDataType="i4"
+                      cachedName="customer_key"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[customer_key]"
+                      lineageId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output].Columns[customer_key]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[product_key]"
+                      cachedDataType="i4"
+                      cachedName="product_key"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[product_key]"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[product_key]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[territory_key]"
+                      cachedDataType="i4"
+                      cachedName="territory_key"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[territory_key]"
+                      lineageId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output].Columns[territory_key]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[extended_sales]"
+                      cachedDataType="cy"
+                      cachedName="extended_sales"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[extended_sales]"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_sales]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[SalesOrderID]"
+                      cachedDataType="i4"
+                      cachedName="SalesOrderID"
+                      cachedSortKeyPosition="1"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_order_id]"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[SalesOrderDetailID]"
+                      cachedDataType="i4"
+                      cachedName="SalesOrderDetailID"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[line_number]"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[SalesOrderDetailID]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[OrderQty]"
+                      cachedDataType="i2"
+                      cachedName="OrderQty"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[quantity]"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[OrderQty]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[UnitPrice]"
+                      cachedDataType="cy"
+                      cachedName="UnitPrice"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[unit_price]"
+                      lineageId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output].Columns[UnitPrice]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[standard_cost]"
+                      cachedDataType="cy"
+                      cachedName="standard_cost"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[unit_cost]"
+                      lineageId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output].Columns[standard_cost]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[extended_cost]"
+                      cachedDataType="cy"
+                      cachedName="extended_cost"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[extened_cost]"
+                      lineageId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output].Columns[extended_cost]" />
+                    <inputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[order_date_key]"
+                      cachedDataType="i4"
+                      cachedName="order_date_key"
+                      externalMetadataColumnId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_date_key]"
+                      lineageId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output].Columns[order_date_key]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[product_key]"
+                      dataType="i4"
+                      name="product_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[customer_key]"
+                      dataType="i4"
+                      name="customer_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[territory_key]"
+                      dataType="i4"
+                      name="territory_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_date_key]"
+                      dataType="i4"
+                      name="order_date_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="sales_order_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[line_number]"
+                      dataType="i4"
+                      name="line_number" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[quantity]"
+                      dataType="i4"
+                      name="quantity" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[unit_price]"
+                      dataType="cy"
+                      name="unit_price" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[unit_cost]"
+                      dataType="cy"
+                      name="unit_cost" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tax_amount]"
+                      dataType="cy"
+                      name="tax_amount" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[freight]"
+                      dataType="cy"
+                      name="freight" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[extended_sales]"
+                      dataType="cy"
+                      name="extended_sales" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[extened_cost]"
+                      dataType="cy"
+                      name="extened_cost" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[created_at]"
+                      dataType="dbTimeStamp"
+                      name="created_at" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\Sales Order Detiels"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Sales Order Detiels"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    sod.SalesOrderID AS SalesOrderID,
+    sod.SalesOrderDetailID,
+    sod.OrderQty,
+    sod.ProductID,
+    sod.UnitPrice,
+    sod.UnitPriceDiscount,
+    sod.LineTotal
+FROM sales.SalesOrderDetail AS sod
+INNER JOIN sales.SalesOrderHeader AS soh
+    ON sod.SalesOrderID = soh.SalesOrderID
+WHERE soh.OnlineOrderFlag = 1
+    AND soh.ModifiedDate &gt;= ?
+    AND soh.ModifiedDate &lt; ?
+ORDER BY sod.SalesOrderID;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping">"Parameter0:Input",{8392B6F0-A0A8-4628-9893-6DA15EE7E29C};"Parameter1:Input",System::StartTime;</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\Sales Order Detiels.Connections[OleDbConnection]"
+                  connectionManagerID="{E9E9785F-6968-40B1-9F19-95C324800B96}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Source database]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output]"
+                  isSorted="true"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                      name="SalesOrderID"
+                      sortKeyPosition="1"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderDetailID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]"
+                      name="SalesOrderDetailID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[ProductID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[ProductID]"
+                      name="ProductID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[OrderQty]"
+                      dataType="i2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[OrderQty]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[OrderQty]"
+                      name="OrderQty"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPrice]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[UnitPrice]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPrice]"
+                      name="UnitPrice"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[UnitPriceDiscount]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]"
+                      name="UnitPriceDiscount"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[LineTotal]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[LineTotal]"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].Columns[LineTotal]"
+                      name="LineTotal"
+                      precision="38"
+                      scale="6"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                      dataType="i4"
+                      name="SalesOrderID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderDetailID]"
+                      dataType="i4"
+                      name="SalesOrderDetailID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                      dataType="i4"
+                      name="ProductID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[OrderQty]"
+                      dataType="i2"
+                      name="OrderQty" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[UnitPrice]"
+                      dataType="cy"
+                      name="UnitPrice" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[UnitPriceDiscount]"
+                      dataType="cy"
+                      name="UnitPriceDiscount" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output].ExternalColumns[LineTotal]"
+                      dataType="numeric"
+                      name="LineTotal"
+                      precision="38"
+                      scale="6" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                      name="SalesOrderID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[SalesOrderDetailID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[SalesOrderDetailID]"
+                      name="SalesOrderDetailID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ProductID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ProductID]"
+                      name="ProductID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[OrderQty]"
+                      dataType="i2"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[OrderQty]"
+                      name="OrderQty" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[UnitPrice]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[UnitPrice]"
+                      name="UnitPrice" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[UnitPriceDiscount]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[UnitPriceDiscount]"
+                      name="UnitPriceDiscount" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[LineTotal]"
+                      dataType="numeric"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[LineTotal]"
+                      name="LineTotal"
+                      precision="38"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT Fact Table\Sales Order Header"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Sales Order Header"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+	SalesOrderID,
+	SalesOrderNumber,
+	CONVERT(date, OrderDate) AS OrderDate,
+	CustomerID,
+	TerritoryID,
+	TaxAmt,
+	Freight
+FROM Sales.SalesOrderHeader
+WHERE OnlineOrderFlag = 1
+and modifieddate &gt;= ?
+and modifieddate &lt; ?
+ORDER BY SalesOrderID</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping">"Parameter0:Input",{8392B6F0-A0A8-4628-9893-6DA15EE7E29C};"Parameter1:Input",System::StartTime;</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT Fact Table\Sales Order Header.Connections[OleDbConnection]"
+                  connectionManagerID="{E9E9785F-6968-40B1-9F19-95C324800B96}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Source database]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output]"
+                  isSorted="true"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                      name="SalesOrderID"
+                      sortKeyPosition="1"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderNumber]"
+                      length="25"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]"
+                      name="SalesOrderNumber"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[OrderDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[OrderDate]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[OrderDate]"
+                      name="OrderDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                      name="CustomerID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TerritoryID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[TerritoryID]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TerritoryID]"
+                      name="TerritoryID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TaxAmt]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[TaxAmt]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[TaxAmt]"
+                      name="TaxAmt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[Freight]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[Freight]"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].Columns[Freight]"
+                      name="Freight"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                      dataType="i4"
+                      name="SalesOrderID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderNumber]"
+                      dataType="wstr"
+                      length="25"
+                      name="SalesOrderNumber" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[OrderDate]"
+                      dataType="dbDate"
+                      name="OrderDate" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                      dataType="i4"
+                      name="CustomerID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[TerritoryID]"
+                      dataType="i4"
+                      name="TerritoryID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[TaxAmt]"
+                      dataType="cy"
+                      name="TaxAmt" />
+                    <externalMetadataColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output].ExternalColumns[Freight]"
+                      dataType="cy"
+                      name="Freight" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                      name="SalesOrderID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[SalesOrderNumber]"
+                      dataType="wstr"
+                      length="25"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[SalesOrderNumber]"
+                      name="SalesOrderNumber" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[OrderDate]"
+                      dataType="dbDate"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[OrderDate]"
+                      name="OrderDate" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                      name="CustomerID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[TerritoryID]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[TerritoryID]"
+                      name="TerritoryID" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[TaxAmt]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[TaxAmt]"
+                      name="TaxAmt" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[Freight]"
+                      dataType="cy"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[Freight]"
+                      name="Freight" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT Fact Table.Paths[Derived Column Output]"
+              endId="Package\DFT Fact Table\DRV - Calculation.Inputs[Derived Column Input]"
+              name="Derived Column Output"
+              startId="Package\DFT Fact Table\DRV - Replace Nulls.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Derived Column Output1]"
+              endId="Package\DFT Fact Table\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\DFT Fact Table\DRV - Calculation.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Lookup Match Output]"
+              endId="Package\DFT Fact Table\LKP - Product.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\DFT Fact Table\LKP - Customers.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Lookup Match Output1]"
+              endId="Package\DFT Fact Table\LKP - Terriotry.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\DFT Fact Table\LKP - Product.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Lookup Match Output2]"
+              endId="Package\DFT Fact Table\LKP - Date.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\DFT Fact Table\LKP - Terriotry.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Lookup Match Output3]"
+              endId="Package\DFT Fact Table\DRV - Replace Nulls.Inputs[Derived Column Input]"
+              name="Lookup Match Output"
+              startId="Package\DFT Fact Table\LKP - Date.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[Merge Join Output]"
+              endId="Package\DFT Fact Table\LKP - Customers.Inputs[Lookup Input]"
+              name="Merge Join Output"
+              startId="Package\DFT Fact Table\Merge Join.Outputs[Merge Join Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[OLE DB Source Output]"
+              endId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Left Input]"
+              name="OLE DB Source Output"
+              startId="Package\DFT Fact Table\Sales Order Header.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT Fact Table.Paths[OLE DB Source Output1]"
+              endId="Package\DFT Fact Table\Merge Join.Inputs[Merge Join Right Input]"
+              name="OLE DB Source Output"
+              startId="Package\DFT Fact Table\Sales Order Detiels.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Last Load Date"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B1330106-6370-4BBA-BE8D-A830FE382C10}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Last Load Date"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{0F1077EC-5EE0-4A5F-A94C-125440725247}"
+          SQLTask:SqlStatementSource="select last_load_date&#xA;from meta_control_table&#xA;where source_table = 'sales order header'"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="last_load_date"
+            SQLTask:DtsVariableName="User::last_load_date" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL - Update Last Date"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E649FC0F-E0EC-4863-9E81-F08C1C99BE1C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL - Update Last Date"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{0F1077EC-5EE0-4A5F-A94C-125440725247}"
+          SQLTask:SqlStatementSource="update meta_control_table&#xA;set last_load_date = ?&#xA;where source_table = 'sales order header'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate FACT TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:Disabled="True"
+      DTS:DTSID="{F506BDFC-CEB7-47DD-9377-3D9FFDF87132}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate FACT TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{0F1077EC-5EE0-4A5F-A94C-125440725247}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE fact_sales" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{652BEA74-FEAC-4C93-BAD1-DA2E03DC3F18}"
+      DTS:From="Package\Get Last Load Date"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\DFT Fact Table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{8C503449-1834-4A2E-AEB7-419886C54501}"
+      DTS:From="Package\DFT Fact Table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\SQL - Update Last Date" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="149.6,41.6"
+          Id="Package\DFT Fact Table"
+          TopLeft="294.285714912171,131.529411649415" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Get Last Load Date"
+          TopLeft="287.857143469915,70.3529411148035" />
+        <NodeLayout
+          Size="189.6,41.6"
+          Id="Package\SQL - Update Last Date"
+          TopLeft="276.428572017015,204.941176290949" />
+        <NodeLayout
+          Size="181.6,41.6"
+          Id="Package\Truncate FACT TABLE"
+          TopLeft="582.857144097894,19.1176470420662" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="456.657143469915,91.1529411148035">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-12.7714285577436,61.1764705346119"
+              Start="0,0"
+              End="-5.2714285577436,61.1764705346119">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="18.5,0"
+                    Point2="22.5,0"
+                    Point3="22.5,4" />
+                  <mssgle:LineSegment
+                    End="22.5,57.1764705346119" />
+                  <mssgle:CubicBezierSegment
+                    Point1="22.5,57.1764705346119"
+                    Point2="22.5,61.1764705346119"
+                    Point3="18.5,61.1764705346119" />
+                  <mssgle:LineSegment
+                    End="-5.2714285577436,61.1764705346119" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="370.157143464594,173.129411649415">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.811764641534"
+              Start="0,0"
+              End="0,24.311764641534">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.311764641534" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\DFT Fact Table">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="129.6,41.6"
+          Id="Package\DFT Fact Table\Merge Join"
+          TopLeft="162.50000034592,150.519607711201" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\DFT Fact Table\OLE DB Destination"
+          TopLeft="326.547619742754,418.117647053461" />
+        <NodeLayout
+          Size="169.6,41.6"
+          Id="Package\DFT Fact Table\Sales Order Header"
+          TopLeft="51.7857143959524,85.3921567878956" />
+        <NodeLayout
+          Size="147.2,41.6"
+          Id="Package\DFT Fact Table\LKP - Terriotry"
+          TopLeft="354.642857897799,248.12941161523" />
+        <NodeLayout
+          Size="128.8,41.6"
+          Id="Package\DFT Fact Table\LKP - Date"
+          TopLeft="159.642857482695,282.986274518406" />
+        <NodeLayout
+          Size="168,41.6"
+          Id="Package\DFT Fact Table\Sales Order Detiels"
+          TopLeft="245.119048140841,86.0509804057861" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT Fact Table\DRV - Replace Nulls"
+          TopLeft="345.714286450221,320.525490140221" />
+        <NodeLayout
+          Size="160,41.6"
+          Id="Package\DFT Fact Table\DRV - Calculation"
+          TopLeft="150.119047938612,372.160784281328" />
+        <NodeLayout
+          Size="156,41.6"
+          Id="Package\DFT Fact Table\LKP - Customers"
+          TopLeft="365.11904839629,171.294117496913" />
+        <NodeLayout
+          Size="142.4,41.6"
+          Id="Package\DFT Fact Table\LKP - Product"
+          TopLeft="153.809524136944,210.421568443008" />
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Lookup Match Output3]"
+          TopLeft="288.442857482695,309.386274518406">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="57.2714289675257,31.9392156218142"
+              Start="0,0"
+              End="49.7714289675257,31.9392156218142">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="20.1812700085109,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.1812700085109,0"
+                    Point2="24.1812700085109,0"
+                    Point3="24.1812700085109,4" />
+                  <mssgle:LineSegment
+                    End="24.1812700085109,27.9392156218142" />
+                  <mssgle:CubicBezierSegment
+                    Point1="24.1812700085109,27.9392156218142"
+                    Point2="24.1812700085109,31.9392156218142"
+                    Point3="28.1812700085109,31.9392156218142" />
+                  <mssgle:LineSegment
+                    End="49.7714289675257,31.9392156218142" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-24.0101167102391,-17.609375,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Lookup Match Output2]"
+          TopLeft="354.642857897799,274.52941161523">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-66.2000004151034,29.2568629031761"
+              Start="0,0"
+              End="-58.7000004151034,29.2568629031761">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-23.951111286377,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-23.951111286377,0"
+                    Point2="-27.951111286377,0"
+                    Point3="-27.951111286377,4" />
+                  <mssgle:LineSegment
+                    End="-27.951111286377,25.2568629031761" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-27.951111286377,25.2568629031761"
+                    Point2="-27.951111286377,29.2568629031761"
+                    Point3="-31.951111286377,29.2568629031761" />
+                  <mssgle:LineSegment
+                    End="-58.7000004151034,29.2568629031761" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-76.142498005127,-17.609375,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Lookup Match Output1]"
+          TopLeft="296.209524136944,236.821568443008">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="58.4333337608547,32.1078431722222"
+              Start="0,0"
+              End="50.9333337608547,32.1078431722222">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="20.6718520323609,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.6718520323609,0"
+                    Point2="24.6718520323609,0"
+                    Point3="24.6718520323609,4" />
+                  <mssgle:LineSegment
+                    End="24.6718520323609,28.1078431722222" />
+                  <mssgle:CubicBezierSegment
+                    Point1="24.6718520323609,28.1078431722222"
+                    Point2="24.6718520323609,32.1078431722222"
+                    Point3="28.6718520323609,32.1078431722222" />
+                  <mssgle:LineSegment
+                    End="50.9333337608547,32.1078431722222" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-23.5195346863891,-17.609375,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Lookup Match Output]"
+          TopLeft="365.11904839629,197.694117496913">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-68.9095242593459,33.5274509460953"
+              Start="0,0"
+              End="-61.4095242593459,33.5274509460953">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-25.0951324650571,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-25.0951324650571,0"
+                    Point2="-29.0951324650571,0"
+                    Point3="-29.0951324650571,4" />
+                  <mssgle:LineSegment
+                    End="-29.0951324650571,29.5274509460953" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-29.0951324650571,29.5274509460953"
+                    Point2="-29.0951324650571,33.5274509460953"
+                    Point3="-33.0951324650571,33.5274509460953" />
+                  <mssgle:LineSegment
+                    End="-61.4095242593459,33.5274509460953" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-77.2865191838071,-17.609375,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Derived Column Output1]"
+          TopLeft="310.119047938612,395.617647053461">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="101.628571804141,22.5"
+              Start="0,0"
+              End="101.628571804141,15">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="97.6285718041414,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="97.6285718041414,0"
+                    Point2="101.628571804141,0"
+                    Point3="101.628571804141,4" />
+                  <mssgle:LineSegment
+                    End="101.628571804141,15" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Derived Column Output]"
+          TopLeft="345.714286450221,346.925490140221">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-35.5952385116087,46.0352941411078"
+              Start="0,0"
+              End="-28.0952385116087,46.0352941411078">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-11.0291007049015,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-11.0291007049015,0"
+                    Point2="-15.0291007049015,0"
+                    Point3="-15.0291007049015,4" />
+                  <mssgle:LineSegment
+                    End="-15.0291007049015,42.0352941411078" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-15.0291007049015,42.0352941411078"
+                    Point2="-15.0291007049015,46.0352941411078"
+                    Point3="-19.0291007049015,46.0352941411078" />
+                  <mssgle:LineSegment
+                    End="-28.0952385116087,46.0352941411078" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[OLE DB Source Output1]"
+          TopLeft="329.119048140841,127.650980405786">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-81.5523811282545,22.8686273054147"
+              Start="0,0"
+              End="-81.5523811282545,15.3686273054147">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,9.55384496394094" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,9.55384496394094"
+                    Point2="0,13.5538449639409"
+                    Point3="-4,13.5538449639409" />
+                  <mssgle:LineSegment
+                    End="-77.5523811282545,13.5538449639409" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-77.5523811282545,13.5538449639409"
+                    Point2="-81.5523811282545,13.5538449639409"
+                    Point3="-81.5523811282545,17.5538449639409" />
+                  <mssgle:LineSegment
+                    End="-81.5523811282545,15.3686273054147" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[OLE DB Source Output]"
+          TopLeft="136.585714395952,126.992156787896">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="70.4476192833012,23.5274509233053"
+              Start="0,0"
+              End="70.4476192833012,16.0274509233053">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,9.94431847405656" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,9.94431847405656"
+                    Point2="0,13.9443184740566"
+                    Point3="4,13.9443184740566" />
+                  <mssgle:LineSegment
+                    End="66.4476192833012,13.9443184740566" />
+                  <mssgle:CubicBezierSegment
+                    Point1="66.4476192833012,13.9443184740566"
+                    Point2="70.4476192833012,13.9443184740566"
+                    Point3="70.4476192833012,17.9443184740566" />
+                  <mssgle:LineSegment
+                    End="70.4476192833012,16.0274509233053" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT Fact Table.Paths[Merge Join Output]"
+          TopLeft="292.10000034592,171.319607711201">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="73.0190480503695,20.774509785712"
+              Start="0,0"
+              End="65.5190480503695,20.774509785712">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="32.5095240251848,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="32.5095240251848,0"
+                    Point2="36.5095240251848,0"
+                    Point3="36.5095240251848,4" />
+                  <mssgle:LineSegment
+                    End="36.5095240251848,16.774509785712" />
+                  <mssgle:CubicBezierSegment
+                    Point1="36.5095240251848,16.774509785712"
+                    Point2="36.5095240251848,20.774509785712"
+                    Point3="40.5095240251848,20.774509785712" />
+                  <mssgle:LineSegment
+                    End="65.5190480503695,20.774509785712" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\Sales Order Header">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\LKP - Terriotry">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\LKP - Date">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\Sales Order Detiels">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\LKP - Customers">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT Fact Table\LKP - Product">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
