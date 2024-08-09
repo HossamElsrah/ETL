@@ -1,12 +1,5 @@
 # ETL | Building Sales Data Mart | SSIS
 # *Data Integration and Transformation Project Using SSIS*
-
-Certainly! Below is the full description you can copy and paste for your GitHub project.
-
----
-
-## Project Title: Comprehensive ETL Process for Data Transformation and Loading from Data Warehouse to SQL Server
-
 ### Overview
 This project is a robust ETL (Extract, Transform, Load) process designed to extract data from a SQL Server-based data warehouse, transform it to meet business requirements, and load it into a destination SQL Server database. The ETL process is managed and executed using SQL Server Integration Services (SSIS), incorporating extensive error handling, data validation, and transformation logic to ensure accurate and efficient data processing.
 
